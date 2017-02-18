@@ -3,17 +3,20 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      done: false
+      current: exampleVideoData[0]
     };
   }
 
 //Add click handler here
 
-  currentVideo = event => {
-    if(!event) { 
-      return exampleVideoData[0];
-    } else {
-
+  currentVideo(event) {
+    var target = event.target.textContent;
+    for (var i = 0; i < exampleVideoData.length; i++) {
+      if (exampleVideoData[i].snippet.title === target) {
+        this.setState({
+          current: exampleVideoData[i]
+        });
+      }
     }
   }
 
@@ -22,10 +25,10 @@ class App extends React.Component {
     <div>
       <Nav />
       <div className="col-md-7">
-        <VideoPlayer video={currentVideo}/>
+        <VideoPlayer video={this.state.current}/>
       </div>
       <div className="col-md-5">
-        <VideoList videos={exampleVideoData}/>
+        <VideoList selected={this.currentVideo.bind(this)} videos={exampleVideoData}/>
       </div>
     </div>
     );
