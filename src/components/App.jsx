@@ -3,18 +3,31 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      videos: [],
       current: exampleVideoData[0]
     };
   }
 
-//Add click handler here
+  getVideos(event) {
+    var options = {
+      key: YOUTUBE_API_KEY,
+      query: event,
+      max: 5
+    }
+    searchYouTube(options, (videos) => {
+      this.setState({
+        videos: videos,
+        current: videos[0]
+      })
+    });
+  }
 
   currentVideo(event) {
     var target = event.target.textContent;
-    for (var i = 0; i < exampleVideoData.length; i++) {
-      if (exampleVideoData[i].snippet.title === target) {
+    for (var i = 0; i < videos.length; i++) {
+      if (this.state.videos.snippet.title === target) {
         this.setState({
-          current: exampleVideoData[i]
+          current: videos[i]
         });
       }
     }
@@ -23,12 +36,12 @@ class App extends React.Component {
   render() {
     return (
     <div>
-      <Nav />
+      <Nav handleSearch={this.getVideos.bind(this)} />
       <div className="col-md-7">
         <VideoPlayer video={this.state.current}/>
       </div>
       <div className="col-md-5">
-        <VideoList selected={this.currentVideo.bind(this)} videos={exampleVideoData}/>
+        <VideoList selected={this.currentVideo.bind(this)} videos={this.state.videos}/>
       </div>
     </div>
     );
